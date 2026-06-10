@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LD · Tático Jurídico para GCM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --navy-900:#0a141f;
+    --navy-800:#0d1a28;
+    --navy-700:#102234;
+    --navy-600:#16304a;
+    --bone:#f4f1ea;
+    --bone-dim:#d9d4c7;
+    --ink:#ece9e1;
+    --muted:#93a1b0;
+    --muted-2:#6f7e8e;
+    --gold:#56e9f2;
+    --gold-bright:#8af4f9;
+    --cyan-deep:#0e7b84;
+    --crimson:#e0727b;
+    --line:rgba(86,233,242,.24);
+    --line-soft:rgba(255,255,255,.08);
+    --font-display:"Bebas Neue","Arial Narrow",sans-serif;
+    --font-body:"Open Sans",-apple-system,sans-serif;
+    --font-mono:"Open Sans",sans-serif;
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--navy-900);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:18px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--navy-900);}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:400;line-height:.92;letter-spacing:.012em;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px;}
+  .eyebrow{
+    font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:14px;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);opacity:.8;}
+  .eyebrow.center::after{content:"";width:34px;height:1px;background:var(--gold);opacity:.8;}
+  .section{padding:130px 0;position:relative;}
+  .section-num{
+    position:absolute;top:54px;right:40px;font-family:var(--font-mono);font-size:12px;font-weight:600;
+    letter-spacing:.2em;color:var(--muted-2);
+  }
+
+  /* buttons */
+  .btn{
+    font-family:var(--font-display);font-weight:400;font-size:18px;letter-spacing:.06em;
+    text-transform:uppercase;padding:15px 30px 13px;display:inline-flex;align-items:center;gap:12px;
+    border-radius:2px;cursor:pointer;border:1px solid transparent;transition:.25s ease;white-space:nowrap;
+  }
+  .btn-gold{background:var(--gold);color:var(--navy-900);}
+  .btn-gold:hover{background:var(--gold-bright);transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-soft);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+  .btn .arw{font-family:var(--font-mono);font-weight:400;}
+
+  /* nav */
+  header{position:fixed;top:0;left:0;right:0;z-index:60;transition:.3s ease;}
+  header .bar{display:flex;align-items:center;justify-content:space-between;height:78px;}
+  header.scrolled{background:rgba(10,20,31,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft);}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand img.lock{height:42px;width:auto;display:block;}
+  .brand .seal{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:15px;color:var(--gold);letter-spacing:-.03em;}
+  .brand .bt{font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.02em;}
+  .brand .bt small{display:block;font-family:var(--font-mono);font-weight:400;font-size:9.5px;letter-spacing:.24em;color:var(--muted);margin-top:1px;}
+  nav.links{display:flex;gap:34px;align-items:center;}
+  nav.links a{font-family:var(--font-display);font-weight:600;font-size:13.5px;letter-spacing:.03em;color:var(--muted);transition:.2s;}
+  nav.links a:hover{color:var(--ink);}
+  .nav-cta{display:flex;align-items:center;gap:22px;}
+  @media(max-width:980px){nav.links{display:none;}}
+
+  /* hero */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding-top:78px;overflow:hidden;}
+  .hero-photo{position:absolute;inset:0;z-index:0;background:url('assets/img-frssj3.png') center 22%/cover no-repeat;transform:scale(1.04);}
+  .hero-scrim{position:absolute;inset:0;z-index:1;background:
+      linear-gradient(95deg,rgba(8,15,23,.97) 0%,rgba(8,15,23,.88) 34%,rgba(8,15,23,.45) 64%,rgba(8,15,23,.30) 100%),
+      linear-gradient(0deg,rgba(8,15,23,.92),transparent 50%);
+  }
+  .hero-grid{position:absolute;inset:0;z-index:1;opacity:.35;
+    background-image:linear-gradient(rgba(86,233,242,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(86,233,242,.06) 1px,transparent 1px);
+    background-size:64px 64px;mask-image:radial-gradient(circle at 30% 50%,#000,transparent 72%);
+  }
+  .hero .wrap{position:relative;z-index:2;width:100%;}
+  .hero-copy{max-width:780px;}
+  .hero h1{font-size:clamp(58px,7.4vw,124px);font-weight:400;letter-spacing:.01em;margin:30px 0 0;text-transform:uppercase;}
+  .hero h1 .gl{color:var(--gold);}
+  .hero .lead{font-size:clamp(22px,2vw,29px);font-weight:600;color:var(--ink);max-width:32ch;margin-top:30px;font-style:italic;}
+  .hero .sub{font-size:18px;color:#c2cdd8;max-width:52ch;margin-top:22px;}
+  .hero .cta-row{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;}
+  .hero-figure{position:relative;aspect-ratio:1/1;display:grid;place-items:center;}
+  .shield-ring{position:absolute;width:80%;aspect-ratio:1;border:1px solid var(--line);border-radius:50%;}
+  .shield-ring.r2{width:62%;border-color:rgba(86,233,242,.16);}
+  .shield-ring.r3{width:98%;border-color:rgba(86,233,242,.08);}
+  .shield-img{position:relative;width:74%;height:auto;z-index:2;filter:drop-shadow(0 0 38px rgba(86,233,242,.35));animation:floaty 6s ease-in-out infinite;}
+  .shield-glow{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(86,233,242,.22),transparent 68%);filter:blur(8px);}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  @media(prefers-reduced-motion:reduce){.shield-img{animation:none;}}
+  .ph{position:relative;width:100%;height:100%;border:1px solid var(--line);background:
+      repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 2px,transparent 2px 11px),var(--navy-700);
+    display:grid;place-items:center;overflow:hidden;}
+  .ph::after{content:attr(data-label);font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;color:var(--muted-2);text-transform:uppercase;text-align:center;padding:0 18px;}
+  .ph .crn{position:absolute;width:16px;height:16px;border:1px solid var(--gold);}
+  .ph .crn.tl{top:12px;left:12px;border-right:0;border-bottom:0;}
+  .ph .crn.tr{top:12px;right:12px;border-left:0;border-bottom:0;}
+  .ph .crn.bl{bottom:12px;left:12px;border-right:0;border-top:0;}
+  .ph .crn.br{bottom:12px;right:12px;border-left:0;border-top:0;}
+  .hero-tag{position:absolute;bottom:18px;left:18px;right:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;z-index:3;}
+  @media(max-width:980px){.hero .wrap{display:block;}}
+
+  .scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.2em;color:var(--muted-2);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .scroll-hint .ln{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);animation:drop 2s infinite;}
+  @keyframes drop{0%{opacity:.2;transform:scaleY(.4);transform-origin:top;}50%{opacity:1;}100%{opacity:.2;transform:scaleY(1);transform-origin:top;}}
+
+  /* generic heads */
+  .head{max-width:60ch;}
+  .head h2{font-size:clamp(40px,4.6vw,68px);margin-top:20px;text-transform:uppercase;letter-spacing:.012em;}
+  .head p.deck{font-size:20px;color:var(--muted);margin-top:24px;font-weight:400;line-height:1.6;}
+  .lead-statement{font-size:clamp(22px,2.4vw,30px);font-weight:500;line-height:1.4;max-width:24ch;}
+
+  /* PROBLEM */
+  #problema{background:var(--navy-800);border-top:1px solid var(--line-soft);}
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:64px;border:1px solid var(--line-soft);}
+  .prob-cell{padding:42px 38px;border-right:1px solid var(--line-soft);position:relative;transition:.3s;}
+  .prob-cell:last-child{border-right:0;}
+  .prob-cell:hover{background:var(--navy-700);}
+  .prob-cell .pn{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.15em;}
+  .prob-cell h3{font-size:30px;margin:22px 0 14px;text-transform:uppercase;letter-spacing:.01em;}
+  .prob-cell p{font-size:17px;color:var(--muted);}
+  @media(max-width:860px){.prob-grid{grid-template-columns:1fr;}.prob-cell{border-right:0;border-bottom:1px solid var(--line-soft);}.prob-cell:last-child{border-bottom:0;}}
+
+  /* COST */
+  .cost-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-top:56px;}
+  .cost-list{display:flex;flex-direction:column;}
+  .cost-item{display:flex;gap:22px;padding:26px 0;border-bottom:1px solid var(--line-soft);}
+  .cost-item:first-child{border-top:1px solid var(--line-soft);}
+  .cost-item .ci{font-family:var(--font-mono);font-size:13px;color:var(--crimson);font-weight:700;padding-top:3px;}
+  .cost-item p{font-size:18px;}
+  .cost-stat{border:1px solid var(--line);padding:48px 44px;background:linear-gradient(160deg,var(--navy-700),var(--navy-800));}
+  .cost-stat .big{font-family:var(--font-display);font-weight:400;font-size:clamp(56px,7vw,100px);line-height:.9;color:var(--gold);letter-spacing:.01em;}
+  .cost-stat .bl{font-size:18px;color:var(--ink);margin-top:18px;}
+  .cost-stat .note{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;color:var(--muted);margin-top:28px;text-transform:uppercase;border-top:1px solid var(--line-soft);padding-top:22px;}
+  @media(max-width:860px){.cost-layout{grid-template-columns:1fr;gap:40px;}}
+
+  /* SOLUTION */
+  #solucao{background:var(--bone);color:var(--navy-900);}
+  #solucao .eyebrow{color:var(--cyan-deep);}
+  #solucao .eyebrow::before,#solucao .eyebrow.center::after{background:var(--cyan-deep);}
+  #solucao .head h2{color:var(--navy-900);}
+  #solucao .head p.deck{color:#4a5560;}
+  #solucao .section-num{color:#9aa3ab;}
+  .sol-ribbon{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:60px;}
+  .sol-card{background:#fff;border:1px solid rgba(15,30,46,.1);padding:38px 32px;position:relative;overflow:hidden;}
+  .sol-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:4px;background:var(--gold);}
+  .sol-card .sc-n{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--cyan-deep);}
+  .sol-card h3{font-size:27px;margin:16px 0 12px;color:var(--navy-900);text-transform:uppercase;letter-spacing:.01em;}
+  .sol-card p{font-size:16.5px;color:#475360;}
+  @media(max-width:860px){.sol-ribbon{grid-template-columns:1fr;}}
+
+  /* PILLARS */
+  .pillar{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;padding:84px 0;border-bottom:1px solid var(--line-soft);align-items:start;}
+  .pillar:last-child{border-bottom:0;}
+  .pillar-meta .pl-tag{font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;}
+  .pillar-meta h3{font-size:clamp(34px,3.8vw,54px);margin:18px 0 28px;text-transform:uppercase;letter-spacing:.012em;}
+  .pillar-meta .quote{font-family:var(--font-body);font-style:italic;font-size:21px;line-height:1.45;color:var(--ink);border-left:2px solid var(--gold);padding-left:24px;max-width:30ch;}
+  .pillar-meta .big-num{font-family:var(--font-display);font-weight:400;font-size:150px;color:transparent;-webkit-text-stroke:1px rgba(86,233,242,.32);line-height:1;margin-bottom:4px;}
+  .pl-topics{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line-soft);border:1px solid var(--line-soft);}
+  .pl-topic{background:var(--navy-800);padding:30px 28px;transition:.3s;}
+  .pl-topic:hover{background:var(--navy-700);}
+  .pl-topic h4{font-size:20px;color:var(--gold-bright);margin-bottom:10px;font-weight:400;letter-spacing:.01em;text-transform:uppercase;font-family:var(--font-display);}
+  .pl-topic p{font-size:15.5px;color:var(--muted);line-height:1.5;}
+  @media(max-width:980px){.pillar{grid-template-columns:1fr;gap:40px;}}
+  @media(max-width:560px){.pl-topics{grid-template-columns:1fr;}}
+
+  /* RESULTS */
+  #resultados{background:var(--navy-800);}
+  .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:60px;}
+  .res-col{border:1px solid var(--line-soft);padding:0;}
+  .res-col .rc-head{padding:32px 30px 26px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--navy-700),transparent);}
+  .res-col .rc-tag{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;}
+  .res-col .rc-head h3{font-size:30px;margin-top:12px;text-transform:uppercase;letter-spacing:.01em;}
+  .res-col ul{list-style:none;padding:14px 30px 30px;}
+  .res-col li{font-size:16.5px;color:var(--muted);padding:13px 0 13px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.04);}
+  .res-col li:last-child{border-bottom:0;}
+  .res-col li::before{content:"";position:absolute;left:0;top:21px;width:9px;height:9px;border:1px solid var(--gold);transform:rotate(45deg);}
+  @media(max-width:860px){.res-grid{grid-template-columns:1fr;}}
+
+  /* INVESTMENT */
+  .inv-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-top:56px;}
+  .inv-quote{font-family:var(--font-body);font-style:italic;font-size:clamp(24px,2.8vw,36px);line-height:1.35;}
+  .inv-quote .hl{color:var(--gold);font-style:normal;font-family:var(--font-display);font-weight:400;letter-spacing:.01em;}
+  .inv-trio{display:flex;flex-direction:column;gap:2px;background:var(--line-soft);border:1px solid var(--line-soft);}
+  .inv-row{background:var(--navy-800);padding:28px 30px;display:flex;gap:24px;align-items:baseline;}
+  .inv-row .ir-tag{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;min-width:80px;}
+  .inv-row p{font-size:17px;color:var(--muted);}
+  @media(max-width:860px){.inv-layout{grid-template-columns:1fr;gap:36px;}}
+
+  /* STEPS */
+  #passos{background:var(--bone);color:var(--navy-900);}
+  #passos .eyebrow{color:var(--cyan-deep);}
+  #passos .eyebrow::before{background:var(--cyan-deep);}
+  #passos .head h2{color:var(--navy-900);}
+  #passos .head p.deck{color:#4a5560;}
+  #passos .section-num{color:#9aa3ab;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:64px;counter-reset:st;}
+  .step{padding:0 40px;border-left:1px solid rgba(15,30,46,.14);position:relative;}
+  .step:first-child{padding-left:0;border-left:0;}
+  .step .st-n{font-family:var(--font-display);font-weight:400;font-size:84px;color:var(--cyan-deep);line-height:1;letter-spacing:.01em;}
+  .step h3{font-size:28px;margin:14px 0 14px;color:var(--navy-900);text-transform:uppercase;letter-spacing:.01em;}
+  .step p{font-size:16.5px;color:#475360;}
+  .step .free{display:inline-block;margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-deep);border:1px solid #a9dde1;padding:6px 12px;}
+  @media(max-width:860px){.steps{grid-template-columns:1fr;gap:44px;}.step{padding-left:0;border-left:0;}}
+
+  /* FINAL CTA */
+  #contato{position:relative;overflow:hidden;background:var(--navy-900);}
+  #contato .cta-photo{position:absolute;inset:0;z-index:0;background:url('assets/traffic-control.jpeg') center 38%/cover;}
+  #contato .cta-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,15,23,.96),rgba(8,15,23,.72) 50%,rgba(8,15,23,.6));}
+  #contato .cta-bg{position:absolute;inset:0;z-index:1;background:radial-gradient(80% 80% at 50% 0%,rgba(86,233,242,.13),transparent 60%);}
+  .cta-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center;}
+  .cta-inner h2{font-size:clamp(36px,4.6vw,68px);text-transform:uppercase;letter-spacing:.012em;}
+  .cta-inner h2 .gl{color:var(--gold);}
+  .cta-inner .sub{font-size:20px;color:var(--muted);margin-top:26px;max-width:38ch;}
+  form.lead-form{background:var(--navy-800);border:1px solid var(--line);padding:40px 38px;}
+  form.lead-form .fl{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;}
+  form.lead-form .fg{margin-bottom:22px;}
+  form.lead-form input,form.lead-form select{width:100%;background:var(--navy-900);border:1px solid var(--line-soft);color:var(--ink);font-family:var(--font-body);font-size:17px;padding:14px 16px;border-radius:2px;transition:.2s;}
+  form.lead-form input:focus,form.lead-form select:focus{outline:none;border-color:var(--gold);}
+  form.lead-form .btn-gold{width:100%;justify-content:center;margin-top:6px;}
+  form.lead-form .pp{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);margin-top:16px;text-align:center;letter-spacing:.04em;}
+  @media(max-width:860px){.cta-inner{grid-template-columns:1fr;gap:40px;}}
+
+  /* footer */
+  footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:54px 0 40px;}
+  footer .ft{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;}
+  footer .ft p{font-size:15px;color:var(--muted);max-width:40ch;margin-top:16px;}
+  footer .ft .fcol h5{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2);margin-bottom:14px;}
+  footer .ft .fcol a{display:block;font-size:15px;color:var(--muted);margin-bottom:9px;transition:.2s;}
+  footer .ft .fcol a:hover{color:var(--gold);}
+  footer .legal{margin-top:44px;padding-top:22px;border-top:1px solid var(--line-soft);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--muted-2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+
+  /* image bands & media */
+  .imgband{position:relative;min-height:60vh;display:flex;align-items:center;overflow:hidden;}
+  .imgband .bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.03);}
+  .imgband .scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,15,23,.95) 0%,rgba(8,15,23,.7) 52%,rgba(8,15,23,.32) 100%),linear-gradient(0deg,rgba(8,15,23,.6),transparent 60%);}
+  .imgband .wrap{position:relative;z-index:2;}
+  .imgband .bq{font-family:var(--font-body);font-style:italic;font-weight:600;font-size:clamp(26px,3.4vw,46px);line-height:1.32;max-width:21ch;color:#fff;}
+  .imgband .bq .gl{color:var(--gold);font-style:normal;}
+  .imgband .sub{font-size:19px;color:#c2cdd8;margin-top:24px;max-width:50ch;}
+
+  .media-frame{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--navy-700);}
+  .media-frame img{display:block;width:100%;height:100%;object-fit:cover;}
+  .media-frame .tag{position:absolute;left:0;bottom:0;background:rgba(8,15,23,.84);backdrop-filter:blur(6px);color:var(--gold);font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:11px 18px;border-top:1px solid var(--line);border-right:1px solid var(--line);}
+  .sol-media{margin-top:56px;height:440px;}
+  .res-media{margin-top:8px;margin-bottom:48px;height:420px;}
+  @media(max-width:860px){.sol-media,.res-media{height:300px;}}
+
+  /* ---- MOBILE ---- */
+  @media(max-width:640px){
+    body{font-size:17px;}
+    .wrap{padding:0 20px;}
+    .section{padding:74px 0;}
+    .section-num{display:none;}
+    header .bar{height:62px;}
+    .brand img.lock{height:28px;}
+    .nav-cta .btn{padding:11px 15px 9px;font-size:15px;letter-spacing:.04em;}
+    .hero{min-height:auto;padding:104px 0 76px;}
+    .hero-photo{background-position:62% 22%;}
+    .hero h1{font-size:46px;margin-top:22px;}
+    .hero .lead{font-size:21px;margin-top:24px;}
+    .hero .sub{font-size:16.5px;}
+    .hero .cta-row{gap:12px;}
+    .hero .cta-row .btn{flex:1 1 auto;justify-content:center;}
+    .scroll-hint{display:none;}
+    .head h2{font-size:34px;}
+    .prob-cell{padding:30px 24px;}
+    .cost-stat{padding:34px 26px;}
+    .cost-stat .big{font-size:54px;}
+    .imgband{min-height:auto;padding:84px 0;}
+    .imgband .bq{font-size:26px;max-width:none;}
+    .pillar{padding:48px 0;gap:32px;}
+    .pillar-meta .big-num{font-size:96px;}
+    .pillar-meta h3{font-size:32px;}
+    .sol-media,.res-media{height:230px;}
+    .res-media{margin-bottom:36px;}
+    .inv-quote{font-size:24px;}
+    .step{padding:0;}
+    .step .st-n{font-size:72px;}
+    form.lead-form{padding:30px 24px;}
+    .cta-inner h2{font-size:38px;}
+    footer .ft{flex-direction:column;gap:30px;}
+    footer .legal{flex-direction:column;gap:8px;}
+  }
+  @media(max-width:400px){
+    .brand img.lock{height:24px;}
+    .nav-cta .btn{padding:10px 12px 8px;font-size:13px;}
+    .hero h1{font-size:40px;}
+  }
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+  .rv.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none;}.scroll-hint .ln{animation:none;}}
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <img class="lock" src="assets/ld-logo-mark.png" alt="LD · Tático Jurídico para GCM" />
+    </a>
+    <nav class="links">
+      <a href="#problema">O Problema</a>
+      <a href="#solucao">A Solução</a>
+      <a href="#pilares">Os 3 Pilares</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#passos">Como Começar</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-gold" href="#contato">Diagnóstico Gratuito <span class="arw">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-photo"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Capacitação Especializada · Segurança Pública Municipal</span>
+      <h1>Tático Jurídico<br /><span class="gl">para GCM</span></h1>
+      <p class="lead">Quando o agente domina a lei, o município para de pagar pelo erro.</p>
+      <p class="sub">Capacitação de alto impacto que une raciocínio jurídico, excelência operacional e controle sob pressão — formando agentes que agem com total segurança jurídica em campo.</p>
+      <div class="cta-row">
+        <a class="btn btn-gold" href="#contato">Agendar diagnóstico <span class="arw">→</span></a>
+        <a class="btn btn-ghost" href="#solucao">Conhecer o método</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Role</span><span class="ln"></span></div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section" id="problema">
+  <span class="section-num">01 — O PROBLEMA REAL</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">A Realidade Oculta</span>
+      <h2>A realidade oculta da segurança pública municipal</h2>
+      <p class="deck">O maior risco do agente não é o confronto — é o erro jurídico. Cada abordagem mal conduzida pode se tornar um processo contra o município.</p>
+    </div>
+    <div class="prob-grid rv">
+      <div class="prob-cell">
+        <span class="pn">01</span>
+        <h3>Prisões anuladas</h3>
+        <p>Erros processuais invalidam flagrantes e libertam suspeitos.</p>
+      </div>
+      <div class="prob-cell">
+        <span class="pn">02</span>
+        <h3>Desgaste político</h3>
+        <p>Abusos de autoridade geram crises de imagem para o gestor.</p>
+      </div>
+      <div class="prob-cell">
+        <span class="pn">03</span>
+        <h3>Responsabilidade solidária</h3>
+        <p>O município responde civilmente pelos atos dos agentes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COST -->
+<section class="section" id="custo" style="background:var(--navy-900);">
+  <span class="section-num">02 — IMPACTO FINANCEIRO</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">O Custo do Erro</span>
+      <h2>O que o erro jurídico custa de verdade</h2>
+      <p class="deck">O custo do erro é duplo: financeiro e político. Municípios chegam a gastar dezenas de milhões por ano em passivos gerados por abordagens irregulares.</p>
+    </div>
+    <div class="cost-layout">
+      <div class="cost-list rv">
+        <div class="cost-item"><span class="ci">→</span><p>Processos por abuso de autoridade e uso desproporcional da força.</p></div>
+        <div class="cost-item"><span class="ci">→</span><p>Provas descartadas por ilegalidade na colheita — casos arquivados.</p></div>
+        <div class="cost-item"><span class="ci">→</span><p>Condenações solidárias do município em ações de indenização.</p></div>
+        <div class="cost-item"><span class="ci">→</span><p>Crises de imagem que consomem o capital político do gestor.</p></div>
+      </div>
+      <div class="cost-stat rv">
+        <div class="big">Dezenas<br />de milhões</div>
+        <p class="bl">é quanto municípios podem desembolsar por ano em passivos gerados por abordagens irregulares.</p>
+        <p class="note">Prevenção custa uma fração do que a remediação exige. O treinamento é o seguro mais barato que existe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="section" id="solucao">
+  <span class="section-num">03 — A SOLUÇÃO</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">LD Tático Jurídico</span>
+      <h2>A ponte entre a lei e a rua</h2>
+      <p class="deck">Não é um curso teórico. É um método integrado que forma agentes capazes de agir com total segurança jurídica em qualquer situação de campo.</p>
+    </div>
+    <div class="sol-media rv">
+      <div class="media-frame" style="height:100%;">
+        <img src="assets/control-room.jpeg" alt="Centro de controle operacional da Guarda Municipal" />
+        <span class="tag">Do CCO à rua · método integrado</span>
+      </div>
+    </div>
+    <div class="sol-ribbon">
+      <div class="sol-card rv">
+        <span class="sc-n">PILAR 01</span>
+        <h3>Segurança Jurídica</h3>
+        <p>Direito Constitucional, Penal e Processual aplicado à realidade da rua — sem abstrações.</p>
+      </div>
+      <div class="sol-card rv">
+        <span class="sc-n">PILAR 02</span>
+        <h3>Excelência Operacional</h3>
+        <p>Abordagem, flagrante, condução e uso progressivo da força executados dentro da lei.</p>
+      </div>
+      <div class="sol-card rv">
+        <span class="sc-n">PILAR 03</span>
+        <h3>Controle Mental</h3>
+        <p>Gestão do estresse, decisão racional e prevenção de reações impulsivas sob pressão extrema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="section" id="pilares" style="background:var(--navy-900);">
+  <span class="section-num">04 — OS TRÊS PILARES</span>
+  <div class="wrap">
+    <div class="head rv" style="margin-bottom:24px;">
+      <span class="eyebrow">O Método em Profundidade</span>
+      <h2>Três pilares, um agente completo</h2>
+    </div>
+
+    <div class="pillar rv">
+      <div class="pillar-meta">
+        <div class="big-num">01</div>
+        <span class="pl-tag">Pilar 01 · Segurança Jurídica</span>
+        <h3>Segurança Constitucional e Penal Aplicada</h3>
+        <p class="quote">"Agente que conhece seus limites nunca os ultrapassa por acidente."</p>
+      </div>
+      <div class="pl-topics">
+        <div class="pl-topic"><h4>Limites Constitucionais</h4><p>Inviolabilidade domiciliar, liberdade de locomoção e direitos fundamentais na prática do campo.</p></div>
+        <div class="pl-topic"><h4>Flagrante Legal</h4><p>Requisitos, procedimentos e documentação para prisões sem vícios que anulem o processo.</p></div>
+        <div class="pl-topic"><h4>Busca Pessoal e Veicular</h4><p>Fundamento legal, critérios de razoabilidade e registro correto.</p></div>
+        <div class="pl-topic"><h4>Responsabilidade do Agente</h4><p>Como se proteger juridicamente contra acusações de abuso e excesso de força.</p></div>
+      </div>
+    </div>
+
+    <div class="pillar rv">
+      <div class="pillar-meta">
+        <div class="big-num">02</div>
+        <span class="pl-tag">Pilar 02 · Excelência Operacional</span>
+        <h3>Excelência Operacional em Campo</h3>
+        <p class="quote">"Eficiência operacional sem passivo judicial — esse é o padrão."</p>
+      </div>
+      <div class="pl-topics">
+        <div class="pl-topic"><h4>Abordagem e Revista</h4><p>Protocolos que garantem legalidade, segurança do agente e validade das provas colhidas.</p></div>
+        <div class="pl-topic"><h4>Uso Progressivo da Força</h4><p>Critérios legais, proporcionalidade e prevenção ao abuso de autoridade.</p></div>
+        <div class="pl-topic"><h4>Flagrante e Condução</h4><p>Da ocorrência ao registro: cada etapa juridicamente documentada e blindada.</p></div>
+        <div class="pl-topic"><h4>Validade das Provas</h4><p>Colheita e cadeia de custódia que sustentam o caso em juízo.</p></div>
+      </div>
+    </div>
+
+    <div class="pillar rv">
+      <div class="pillar-meta">
+        <div class="big-num">03</div>
+        <span class="pl-tag">Pilar 03 · Controle Mental</span>
+        <h3>O Fator Emocional: Decisão Sob Pressão</h3>
+        <p class="quote">"O erro que custa caro ao município começa em segundos de descontrole."</p>
+      </div>
+      <div class="pl-topics">
+        <div class="pl-topic"><h4>Controle do Estresse Agudo</h4><p>Técnicas aplicadas em situações de confronto e crise para manter o raciocínio ativo.</p></div>
+        <div class="pl-topic"><h4>Tomada de Decisão Racional</h4><p>Manter o raciocínio jurídico operando mesmo sob pressão extrema.</p></div>
+        <div class="pl-topic"><h4>Prevenção de Reações Impulsivas</h4><p>Reduzir os erros que geram processos, afastamentos e danos à imagem.</p></div>
+        <div class="pl-topic"><h4>Profissional, não amador</h4><p>A maioria dos abusos não é intencional — é reação impulsiva em alta tensão. O treino mental separa os dois.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE BAND -->
+<section class="imgband">
+  <div class="bg" style="background-image:url('assets/street-stop.jpeg');"></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <span class="eyebrow">Decisão Sob Pressão</span>
+    <p class="bq" style="margin-top:22px;">A maioria dos abusos não é intencional. É reação impulsiva em alta tensão.</p>
+    <p class="sub"><span style="color:var(--gold);">O treinamento mental</span> é o que separa o profissional do amador — e o município do prejuízo.</p>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="section" id="resultados">
+  <span class="section-num">05 — RESULTADOS</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Impacto nos Três Níveis</span>
+      <h2>Benefícios em cascata, do agente ao município</h2>
+      <p class="deck">Uma GCM juridicamente capacitada gera resultados em cascata — do agente individual até a administração municipal.</p>
+    </div>
+    <div class="res-media rv">
+      <div class="media-frame" style="height:100%;">
+        <img src="assets/team-lineup.png" alt="Equipe da Guarda Civil Municipal" />
+        <span class="tag">Uma corporação juridicamente blindada</span>
+      </div>
+    </div>
+    <div class="res-grid">
+      <div class="res-col rv">
+        <div class="rc-head"><span class="rc-tag">Nível 01</span><h3>O Agente</h3></div>
+        <ul>
+          <li>Atua com segurança jurídica plena em campo</li>
+          <li>Reduz o risco de responsabilização pessoal</li>
+          <li>Mais autoridade e legitimidade nas abordagens</li>
+          <li>Proteção contra processos disciplinares</li>
+        </ul>
+      </div>
+      <div class="res-col rv">
+        <div class="rc-head"><span class="rc-tag">Nível 02</span><h3>A Corporação</h3></div>
+        <ul>
+          <li>Menos ocorrências com vícios jurídicos</li>
+          <li>Imagem institucional fortalecida</li>
+          <li>Redução de afastamentos e punições internas</li>
+          <li>Cultura de excelência e profissionalismo</li>
+        </ul>
+      </div>
+      <div class="res-col rv">
+        <div class="rc-head"><span class="rc-tag">Nível 03</span><h3>O Município</h3></div>
+        <ul>
+          <li>Redução direta de gastos com indenizações</li>
+          <li>Menos crises de imagem na mídia</li>
+          <li>Segurança pública como ativo político</li>
+          <li>Gestão de risco jurídico eficiente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT -->
+<section class="section" id="investimento" style="background:var(--navy-800);border-top:1px solid var(--line-soft);">
+  <span class="section-num">06 — INVESTIMENTO INTELIGENTE</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Investimento Inteligente</span>
+      <h2>Capacitar é mais barato do que indenizar</h2>
+    </div>
+    <div class="inv-layout">
+      <div class="inv-quote rv">
+        Uma única ação de indenização pode custar <span class="hl">mais do que um programa de capacitação para toda a corporação.</span>
+        <p style="font-family:var(--font-body);font-style:normal;font-size:18px;color:var(--muted);margin-top:28px;line-height:1.6;">Cada real investido em capacitação jurídica evita múltiplos reais em litígios, defesas judiciais e gestão de crise.</p>
+      </div>
+      <div class="inv-trio rv">
+        <div class="inv-row"><span class="ir-tag">Prevenção</span><p>Custo fixo, controlado e previsível no orçamento municipal.</p></div>
+        <div class="inv-row"><span class="ir-tag">Ativo</span><p>GCM capacitada reduz o passivo judicial e melhora os indicadores de gestão.</p></div>
+        <div class="inv-row"><span class="ir-tag">Político</span><p>Segurança pública eficiente é um dos principais indicadores de aprovação do gestor.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section" id="passos">
+  <span class="section-num">07 — COMO COMEÇAR</span>
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Como Começar</span>
+      <h2>Três passos para transformar sua GCM</h2>
+      <p class="deck">O primeiro passo é gratuito, sem compromisso e com resultado imediato: um diagnóstico real das vulnerabilidades jurídicas da sua corporação.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <div class="st-n">01</div>
+        <h3>Diagnóstico Gratuito</h3>
+        <p>Análise das vulnerabilidades jurídicas e operacionais da sua GCM, sem custo e sem compromisso.</p>
+        <span class="free">Grátis · Sem compromisso</span>
+      </div>
+      <div class="step rv">
+        <div class="st-n">02</div>
+        <h3>Plano Personalizado</h3>
+        <p>Proposta com carga horária, metodologia e cronograma adaptados ao perfil da sua corporação.</p>
+      </div>
+      <div class="step rv">
+        <div class="st-n">03</div>
+        <h3>Implantação e Resultado</h3>
+        <p>Execução do treinamento com métricas de resultado, relatório final e acompanhamento pós-capacitação.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" id="contato">
+  <div class="cta-photo"></div>
+  <div class="cta-bg"></div>
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="rv">
+        <span class="eyebrow">Fale Conosco</span>
+        <h2 style="margin-top:22px;">Agende agora o <span class="gl">diagnóstico gratuito</span> da sua GCM</h2>
+        <p class="sub">Quanto mais cedo começar, menos o município paga em erros que já poderiam ter sido prevenidos.</p>
+      </div>
+      <form class="lead-form rv" onsubmit="event.preventDefault();this.querySelector('.btn-gold').textContent='Solicitação enviada ✓';">
+        <div class="fg"><label class="fl">Nome do responsável</label><input type="text" placeholder="Seu nome" required /></div>
+        <div class="fg"><label class="fl">Município / Corporação</label><input type="text" placeholder="Ex.: GCM de São Paulo" required /></div>
+        <div class="fg"><label class="fl">Cargo</label>
+          <select required>
+            <option value="">Selecione</option>
+            <option>Comandante / Subcomandante</option>
+            <option>Secretário de Segurança</option>
+            <option>Gestor Municipal</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">WhatsApp para contato</label><input type="tel" placeholder="(00) 00000-0000" required /></div>
+        <button type="submit" class="btn btn-gold">Solicitar diagnóstico gratuito</button>
+        <p class="pp">Resposta em até 1 dia útil · Sem compromisso</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap ft">
+    <div class="fcol" style="max-width:360px;">
+      <a class="brand" href="#top">
+        <img class="lock" src="assets/ld-logo-mark.png" alt="LD · Tático Jurídico para GCM" />
+      </a>
+      <p>Capacitação jurídica de alto impacto para Guardas Civis Municipais — a ponte entre a lei e a rua.</p>
+    </div>
+    <div class="fcol">
+      <h5>Navegação</h5>
+      <a href="#problema">O Problema</a>
+      <a href="#solucao">A Solução</a>
+      <a href="#pilares">Os 3 Pilares</a>
+      <a href="#resultados">Resultados</a>
+    </div>
+    <div class="fcol">
+      <h5>Contato</h5>
+      <a href="#contato">Diagnóstico Gratuito</a>
+      <a href="#contato">Fale Conosco</a>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© 2026 LD · Tático Jurídico para GCM</span>
+    <span>SEGURANÇA PÚBLICA MUNICIPAL</span>
+  </div>
+</footer>
+
+<script>
+  // nav shadow on scroll
+  const hd=document.getElementById('hd');
+  const onScroll=()=>{hd.classList.toggle('scrolled',window.scrollY>40);};
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  // reveal
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
