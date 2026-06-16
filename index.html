@@ -622,11 +622,11 @@
         <h2 style="margin-top:22px;">Agende agora o <span class="gl">diagnóstico gratuito</span> da sua GCM</h2>
         <p class="sub">Quanto mais cedo começar, menos o município paga em erros que já poderiam ter sido prevenidos.</p>
       </div>
-      <form class="lead-form rv" onsubmit="event.preventDefault();this.querySelector('.btn-gold').textContent='Solicitação enviada ✓';">
-        <div class="fg"><label class="fl">Nome do responsável</label><input type="text" placeholder="Seu nome" required /></div>
-        <div class="fg"><label class="fl">Município / Corporação</label><input type="text" placeholder="Ex.: GCM de São Paulo" required /></div>
+      <form class="lead-form rv" id="leadForm">
+        <div class="fg"><label class="fl">Nome do responsável</label><input type="text" name="nome" placeholder="Seu nome" required /></div>
+        <div class="fg"><label class="fl">Município / Corporação</label><input type="text" name="municipio" placeholder="Ex.: GCM de São Paulo" required /></div>
         <div class="fg"><label class="fl">Cargo</label>
-          <select required>
+          <select name="cargo" required>
             <option value="">Selecione</option>
             <option>Comandante / Subcomandante</option>
             <option>Secretário de Segurança</option>
@@ -634,8 +634,8 @@
             <option>Outro</option>
           </select>
         </div>
-        <div class="fg"><label class="fl">WhatsApp para contato</label><input type="tel" placeholder="(00) 00000-0000" required /></div>
-        <button type="submit" class="btn btn-gold">Solicitar diagnóstico gratuito</button>
+        <div class="fg"><label class="fl">WhatsApp para contato</label><input type="tel" name="whatsapp" placeholder="(00) 00000-0000" required /></div>
+        <button type="submit" class="btn btn-gold" id="leadBtn">Solicitar diagnóstico gratuito</button>
         <p class="pp">Resposta em até 1 dia útil · Sem compromisso</p>
       </form>
     </div>
@@ -670,6 +670,20 @@
 </footer>
 
 <script>
+  // form submit → webhook
+  document.getElementById('leadForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const btn=document.getElementById('leadBtn');
+    const fd=new FormData(this);
+    const payload={nome:fd.get('nome'),municipio:fd.get('municipio'),cargo:fd.get('cargo'),whatsapp:fd.get('whatsapp')};
+    btn.textContent='Enviando…';btn.disabled=true;
+    try{
+      await fetch('https://webhook.foguetedigital.com.br/webhook/ld',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      btn.textContent='Solicitação enviada ✓';
+    }catch(_){
+      btn.textContent='Erro ao enviar — tente novamente';btn.disabled=false;
+    }
+  });
   // nav shadow on scroll
   const hd=document.getElementById('hd');
   const onScroll=()=>{hd.classList.toggle('scrolled',window.scrollY>40);};
