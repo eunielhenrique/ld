@@ -635,8 +635,9 @@
           </select>
         </div>
         <div class="fg"><label class="fl">WhatsApp para contato</label><input type="tel" name="whatsapp" placeholder="(00) 00000-0000" required /></div>
+        <div class="fg"><label class="fl">E-mail para receber o acesso ao LD LAB</label><input type="email" name="email" placeholder="seu@email.com" required /></div>
         <button type="submit" class="btn btn-gold" id="leadBtn">Solicitar diagnóstico gratuito</button>
-        <p class="pp">Resposta em até 1 dia útil · Sem compromisso</p>
+        <p class="pp">Você receberá acesso imediato ao LD LAB · Sem compromisso</p>
       </form>
     </div>
   </div>
@@ -670,16 +671,29 @@
 </footer>
 
 <script>
-  // form submit → webhook
+  // form submit → Supabase Edge Function (envia e-mail convite ao LD LAB)
   document.getElementById('leadForm').addEventListener('submit',async function(e){
     e.preventDefault();
     const btn=document.getElementById('leadBtn');
     const fd=new FormData(this);
-    const payload={nome:fd.get('nome'),municipio:fd.get('municipio'),cargo:fd.get('cargo'),whatsapp:fd.get('whatsapp')};
+    const payload={
+      nome:fd.get('nome'),
+      municipio:fd.get('municipio'),
+      cargo:fd.get('cargo'),
+      whatsapp:fd.get('whatsapp'),
+      email:fd.get('email'),
+    };
     btn.textContent='Enviando…';btn.disabled=true;
     try{
-      await fetch('https://webhook.foguetedigital.com.br/webhook/ld',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      btn.textContent='Solicitação enviada ✓';
+      const res=await fetch(
+        'https://schjqapmixexdfejjyvu.supabase.co/functions/v1/ld-lab-lead',
+        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}
+      );
+      if(res.ok){
+        btn.textContent='Acesso enviado para seu e-mail ✓';
+      }else{
+        throw new Error('status '+res.status);
+      }
     }catch(_){
       btn.textContent='Erro ao enviar — tente novamente';btn.disabled=false;
     }
