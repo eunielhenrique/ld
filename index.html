@@ -331,7 +331,7 @@
       <a href="#passos">Como Começar</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-gold" href="#contato">Diagnóstico Gratuito <span class="arw">→</span></a>
+      <a class="btn btn-gold" href="#contato">Acesso ao Método <span class="arw">→</span></a>
     </div>
   </div>
 </header>
@@ -348,7 +348,7 @@
       <p class="lead">Quando o agente domina a lei, o município para de pagar pelo erro.</p>
       <p class="sub">Capacitação de alto impacto que une raciocínio jurídico, excelência operacional e controle sob pressão — formando agentes que agem com total segurança jurídica em campo.</p>
       <div class="cta-row">
-        <a class="btn btn-gold" href="#contato">Agendar diagnóstico <span class="arw">→</span></a>
+        <a class="btn btn-gold" href="#contato">Acessar o Método <span class="arw">→</span></a>
         <a class="btn btn-ghost" href="#solucao">Conhecer o método</a>
       </div>
     </div>
@@ -588,13 +588,13 @@
     <div class="head rv">
       <span class="eyebrow">Como Começar</span>
       <h2>Três passos para transformar sua GCM</h2>
-      <p class="deck">O primeiro passo é gratuito, sem compromisso e com resultado imediato: um diagnóstico real das vulnerabilidades jurídicas da sua corporação.</p>
+      <p class="deck">O primeiro passo é gratuito, sem compromisso e com resultado imediato: o método integrado que transforma a atuação jurídica da sua corporação.</p>
     </div>
     <div class="steps">
       <div class="step rv">
         <div class="st-n">01</div>
-        <h3>Diagnóstico Gratuito</h3>
-        <p>Análise das vulnerabilidades jurídicas e operacionais da sua GCM, sem custo e sem compromisso.</p>
+        <h3>Acesso ao Método</h3>
+        <p>Crie seu acesso e explore o método integrado com módulos práticos de tático-jurídico para GCM.</p>
         <span class="free">Grátis · Sem compromisso</span>
       </div>
       <div class="step rv">
@@ -619,7 +619,7 @@
     <div class="cta-inner">
       <div class="rv">
         <span class="eyebrow">Fale Conosco</span>
-        <h2 style="margin-top:22px;">Agende agora o <span class="gl">diagnóstico gratuito</span> da sua GCM</h2>
+        <h2 style="margin-top:22px;">Crie agora seu <span class="gl">acesso ao Método LD</span></h2>
         <p class="sub">Quanto mais cedo começar, menos o município paga em erros que já poderiam ter sido prevenidos.</p>
       </div>
       <form class="lead-form rv" id="leadForm">
@@ -635,8 +635,18 @@
           </select>
         </div>
         <div class="fg"><label class="fl">WhatsApp para contato</label><input type="tel" name="whatsapp" placeholder="(00) 00000-0000" required /></div>
-        <button type="submit" class="btn btn-gold" id="leadBtn">Solicitar diagnóstico gratuito</button>
-        <p class="pp">Resposta em até 1 dia útil · Sem compromisso</p>
+        <div class="fg"><label class="fl">E-mail</label><input type="email" name="email" id="campo-email" placeholder="seu@email.com" required /></div>
+        <div class="fg pass-field" id="pwd-group" style="max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .45s ease;opacity:0;pointer-events:none;">
+          <label class="fl">Crie sua senha de acesso</label>
+          <input type="password" name="senha" id="campo-senha" placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="fg pass-field" id="pwd2-group" style="max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .45s ease;opacity:0;pointer-events:none;">
+          <label class="fl">Confirme a senha</label>
+          <input type="password" name="senha2" id="campo-senha2" placeholder="Repita a senha" autocomplete="new-password" />
+        </div>
+        <div id="form-err" style="display:none;color:#ef4444;font-size:13px;margin-bottom:8px;"></div>
+        <button type="submit" class="btn btn-gold" id="leadBtn">Criar meu acesso</button>
+        <p class="pp">Você receberá acesso imediato ao LD LAB · Sem compromisso</p>
       </form>
     </div>
   </div>
@@ -659,7 +669,7 @@
     </div>
     <div class="fcol">
       <h5>Contato</h5>
-      <a href="#contato">Diagnóstico Gratuito</a>
+      <a href="#contato">Acesso ao Método</a>
       <a href="#contato">Fale Conosco</a>
     </div>
   </div>
@@ -669,19 +679,88 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-  // form submit → webhook
-  document.getElementById('leadForm').addEventListener('submit',async function(e){
+(function(){
+  const { createClient } = window.supabase;
+  const SB = createClient(
+    'https://schjqapmixexdfejjyvu.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjaGpxYXBtaXhleGRmZWpqeXZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1NTkzNjgsImV4cCI6MjA2OTEzNTM2OH0.deNCUFRMk_qHa-utQwOLE3mEb3UNTD2488Ah3d8yfqI'
+  );
+
+  // Mostrar campos de senha quando e-mail válido for digitado
+  const emailEl = document.getElementById('campo-email');
+  function showPasswordFields() {
+    const valid = emailEl.value.includes('@') && emailEl.value.length > 4;
+    const p1 = document.getElementById('pwd-group');
+    const p2 = document.getElementById('pwd2-group');
+    if (valid) {
+      p1.style.maxHeight = '110px'; p1.style.opacity = '1'; p1.style.pointerEvents = 'auto';
+      p2.style.maxHeight = '110px'; p2.style.opacity = '1'; p2.style.pointerEvents = 'auto';
+    }
+  }
+  emailEl.addEventListener('input', showPasswordFields);
+  emailEl.addEventListener('blur',  showPasswordFields);
+
+  function showErr(msg) {
+    const el = document.getElementById('form-err');
+    el.textContent = msg; el.style.display = msg ? 'block' : 'none';
+  }
+
+  // form submit → cria usuário + faz login + redireciona ao LAB
+  document.getElementById('leadForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn=document.getElementById('leadBtn');
-    const fd=new FormData(this);
-    const payload={nome:fd.get('nome'),municipio:fd.get('municipio'),cargo:fd.get('cargo'),whatsapp:fd.get('whatsapp')};
-    btn.textContent='Enviando…';btn.disabled=true;
-    try{
-      await fetch('https://webhook.foguetedigital.com.br/webhook/ld',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      btn.textContent='Solicitação enviada ✓';
-    }catch(_){
-      btn.textContent='Erro ao enviar — tente novamente';btn.disabled=false;
+    showErr('');
+    const btn = document.getElementById('leadBtn');
+    const fd  = new FormData(this);
+    const email  = (fd.get('email')  || '').trim().toLowerCase();
+    const senha  = (fd.get('senha')  || '').trim();
+    const senha2 = (fd.get('senha2') || '').trim();
+
+    if (!senha || senha.length < 6) { showErr('Senha deve ter pelo menos 6 caracteres.'); return; }
+    if (senha !== senha2)            { showErr('As senhas não coincidem.');                return; }
+
+    btn.textContent = 'Criando acesso…'; btn.disabled = true;
+
+    try {
+      // 1. Cria usuário via Edge Function (salva lead + cria conta no Supabase Auth)
+      const res = await fetch(
+        'https://schjqapmixexdfejjyvu.supabase.co/functions/v1/ld-lab-lead',
+        { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: fd.get('nome'), municipio: fd.get('municipio'),
+            cargo: fd.get('cargo'), whatsapp: fd.get('whatsapp'),
+            email, password: senha,
+          })
+        }
+      );
+      const json = await res.json();
+      if (!res.ok && !json.ok) throw new Error(json.error || 'status ' + res.status);
+
+      // 2. Faz login com a senha recém-criada
+      const { data, error: signErr } = await SB.auth.signInWithPassword({ email, password: senha });
+      if (signErr) {
+        if (signErr.message.includes('Invalid login')) {
+          showErr('E-mail já cadastrado com outra senha. Use a senha do seu cadastro anterior.');
+        } else {
+          showErr(signErr.message);
+        }
+        btn.textContent = 'Criar meu acesso'; btn.disabled = false;
+        return;
+      }
+
+      // 3. Redireciona ao LAB com os tokens na URL (mesmo mecanismo do magic link)
+      const s = data.session;
+      btn.textContent = 'Redirecionando… ✓';
+      window.location.href =
+        'https://lab.ldtaticojuridico.com.br/#access_token=' + s.access_token +
+        '&refresh_token=' + s.refresh_token +
+        '&expires_in=' + s.expires_in +
+        '&token_type=bearer&type=signup';
+
+    } catch(err) {
+      showErr('Erro ao criar acesso — tente novamente.');
+      btn.textContent = 'Criar meu acesso'; btn.disabled = false;
     }
   });
   // nav shadow on scroll
